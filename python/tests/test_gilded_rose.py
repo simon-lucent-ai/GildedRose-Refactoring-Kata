@@ -7,7 +7,8 @@ import itertools
 
 from gilded_rose import GildedRose, Item
 
-# All significantly different inputs to GildedRose.update_quality(), i.e. all significantly different sets of items:
+# All significantly different inputs to GildedRose.update_quality().
+# I.e. all significantly different sets of items.
 
 # Item types:
 NORMAL = "+5 Dexterity Vest"
