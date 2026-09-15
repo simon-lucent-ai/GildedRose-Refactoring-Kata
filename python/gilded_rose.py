@@ -13,6 +13,7 @@ BACKSTAGE_PASS_TRIPLE_DAYS = 5
 AGED_BRIE = "Aged Brie"
 BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert"
 SULFURAS = "Sulfuras, Hand of Ragnaros"
+CONJURED = "Conjured Mana Cake"
 
 
 class ItemLike(Protocol):
@@ -58,15 +59,24 @@ def _quality_change(item: ItemLike) -> int:
         return -degradation  # Positive change as brie gets better with age.
 
     if item.name == BACKSTAGE_PASS:
-        if past_sell_date:
-            return -item.quality  # Worthless after the concert so change to zero.
-        if item.sell_in <= BACKSTAGE_PASS_TRIPLE_DAYS:
-            return 3
-        if item.sell_in <= BACKSTAGE_PASS_DOUBLE_DAYS:
-            return 2
-        return 1
+        return _backstage_pass_change(item, past_sell_date)
+
+    if item.name == CONJURED:
+        return 2 * degradation
 
     return degradation
+
+
+def _backstage_pass_change(item: ItemLike, past_sell_date: bool) -> int:
+    """Return how much a backstage pass gains, more as the concert approaches."""
+
+    if past_sell_date:
+        return -item.quality  # Worthless after the concert so change to zero.
+    if item.sell_in <= BACKSTAGE_PASS_TRIPLE_DAYS:
+        return 3
+    if item.sell_in <= BACKSTAGE_PASS_DOUBLE_DAYS:
+        return 2
+    return 1
 
 
 # The Item class belongs to the goblin and must not be altered, so its warnings

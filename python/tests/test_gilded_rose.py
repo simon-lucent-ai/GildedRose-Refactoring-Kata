@@ -29,9 +29,7 @@ SULFURAS_QUALITY: int = 80
 # Every combination of (name, sell_in, quality) the inventory can start with.
 # Brute force coverage of all valid combinations, as quick to write and run.
 INPUTS: list[tuple[str, int, int]] = [
-    *itertools.product(
-        (NORMAL, AGED_BRIE, BACKSTAGE_PASS, CONJURED), SELL_INS, QUALITIES
-    ),
+    *itertools.product((NORMAL, AGED_BRIE, BACKSTAGE_PASS), SELL_INS, QUALITIES),
     *itertools.product((SULFURAS,), SELL_INS, (SULFURAS_QUALITY,)),
 ]
 
@@ -228,69 +226,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=48
     (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=49
     (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=50
-    (10, 0),  # Conjured Mana Cake, sell_in=11, quality=0
-    (10, 0),  # Conjured Mana Cake, sell_in=11, quality=1
-    (10, 1),  # Conjured Mana Cake, sell_in=11, quality=2
-    (10, 2),  # Conjured Mana Cake, sell_in=11, quality=3
-    (10, 3),  # Conjured Mana Cake, sell_in=11, quality=4
-    (10, 46),  # Conjured Mana Cake, sell_in=11, quality=47
-    (10, 47),  # Conjured Mana Cake, sell_in=11, quality=48
-    (10, 48),  # Conjured Mana Cake, sell_in=11, quality=49
-    (10, 49),  # Conjured Mana Cake, sell_in=11, quality=50
-    (9, 0),  # Conjured Mana Cake, sell_in=10, quality=0
-    (9, 0),  # Conjured Mana Cake, sell_in=10, quality=1
-    (9, 1),  # Conjured Mana Cake, sell_in=10, quality=2
-    (9, 2),  # Conjured Mana Cake, sell_in=10, quality=3
-    (9, 3),  # Conjured Mana Cake, sell_in=10, quality=4
-    (9, 46),  # Conjured Mana Cake, sell_in=10, quality=47
-    (9, 47),  # Conjured Mana Cake, sell_in=10, quality=48
-    (9, 48),  # Conjured Mana Cake, sell_in=10, quality=49
-    (9, 49),  # Conjured Mana Cake, sell_in=10, quality=50
-    (5, 0),  # Conjured Mana Cake, sell_in=6, quality=0
-    (5, 0),  # Conjured Mana Cake, sell_in=6, quality=1
-    (5, 1),  # Conjured Mana Cake, sell_in=6, quality=2
-    (5, 2),  # Conjured Mana Cake, sell_in=6, quality=3
-    (5, 3),  # Conjured Mana Cake, sell_in=6, quality=4
-    (5, 46),  # Conjured Mana Cake, sell_in=6, quality=47
-    (5, 47),  # Conjured Mana Cake, sell_in=6, quality=48
-    (5, 48),  # Conjured Mana Cake, sell_in=6, quality=49
-    (5, 49),  # Conjured Mana Cake, sell_in=6, quality=50
-    (4, 0),  # Conjured Mana Cake, sell_in=5, quality=0
-    (4, 0),  # Conjured Mana Cake, sell_in=5, quality=1
-    (4, 1),  # Conjured Mana Cake, sell_in=5, quality=2
-    (4, 2),  # Conjured Mana Cake, sell_in=5, quality=3
-    (4, 3),  # Conjured Mana Cake, sell_in=5, quality=4
-    (4, 46),  # Conjured Mana Cake, sell_in=5, quality=47
-    (4, 47),  # Conjured Mana Cake, sell_in=5, quality=48
-    (4, 48),  # Conjured Mana Cake, sell_in=5, quality=49
-    (4, 49),  # Conjured Mana Cake, sell_in=5, quality=50
-    (0, 0),  # Conjured Mana Cake, sell_in=1, quality=0
-    (0, 0),  # Conjured Mana Cake, sell_in=1, quality=1
-    (0, 1),  # Conjured Mana Cake, sell_in=1, quality=2
-    (0, 2),  # Conjured Mana Cake, sell_in=1, quality=3
-    (0, 3),  # Conjured Mana Cake, sell_in=1, quality=4
-    (0, 46),  # Conjured Mana Cake, sell_in=1, quality=47
-    (0, 47),  # Conjured Mana Cake, sell_in=1, quality=48
-    (0, 48),  # Conjured Mana Cake, sell_in=1, quality=49
-    (0, 49),  # Conjured Mana Cake, sell_in=1, quality=50
-    (-1, 0),  # Conjured Mana Cake, sell_in=0, quality=0
-    (-1, 0),  # Conjured Mana Cake, sell_in=0, quality=1
-    (-1, 0),  # Conjured Mana Cake, sell_in=0, quality=2
-    (-1, 1),  # Conjured Mana Cake, sell_in=0, quality=3
-    (-1, 2),  # Conjured Mana Cake, sell_in=0, quality=4
-    (-1, 45),  # Conjured Mana Cake, sell_in=0, quality=47
-    (-1, 46),  # Conjured Mana Cake, sell_in=0, quality=48
-    (-1, 47),  # Conjured Mana Cake, sell_in=0, quality=49
-    (-1, 48),  # Conjured Mana Cake, sell_in=0, quality=50
-    (-2, 0),  # Conjured Mana Cake, sell_in=-1, quality=0
-    (-2, 0),  # Conjured Mana Cake, sell_in=-1, quality=1
-    (-2, 0),  # Conjured Mana Cake, sell_in=-1, quality=2
-    (-2, 1),  # Conjured Mana Cake, sell_in=-1, quality=3
-    (-2, 2),  # Conjured Mana Cake, sell_in=-1, quality=4
-    (-2, 45),  # Conjured Mana Cake, sell_in=-1, quality=47
-    (-2, 46),  # Conjured Mana Cake, sell_in=-1, quality=48
-    (-2, 47),  # Conjured Mana Cake, sell_in=-1, quality=49
-    (-2, 48),  # Conjured Mana Cake, sell_in=-1, quality=50
     (11, 80),  # Sulfuras, Hand of Ragnaros, sell_in=11, quality=80
     (10, 80),  # Sulfuras, Hand of Ragnaros, sell_in=10, quality=80
     (6, 80),  # Sulfuras, Hand of Ragnaros, sell_in=6, quality=80
@@ -298,6 +233,22 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (1, 80),  # Sulfuras, Hand of Ragnaros, sell_in=1, quality=80
     (0, 80),  # Sulfuras, Hand of Ragnaros, sell_in=0, quality=80
     (-1, 80),  # Sulfuras, Hand of Ragnaros, sell_in=-1, quality=80
+]
+
+# Conjured items are new, so these are taken from the requirements rather than
+# recorded from the original code:
+# (sell_in, quality, expected_sell_in, expected_quality) after one day.
+CONJURED_CASES: list[tuple[int, int, int, int]] = [
+    # Twice as fast as a normal item's -1 before the sell date.
+    (11, 10, 10, 8),
+    (1, 10, 0, 8),
+    # Twice as fast again once the sell date has passed.
+    (0, 10, -1, 6),
+    (-1, 10, -2, 6),
+    (0, 50, -1, 46),
+    # Never below the minimum quality.
+    (5, 1, 4, 0),
+    (0, 3, -1, 0),
 ]
 
 
@@ -313,6 +264,17 @@ def test_update_quality_one_day() -> None:
     ]
     GildedRose(items).update_quality()
     assert [(item.sell_in, item.quality) for item in items] == EXPECTED_OUTPUTS
+
+
+def test_update_quality_one_day_for_conjured_items() -> None:
+    """Conjured items degrade twice as fast as normal items, never below the floor."""
+    items: list[Item] = [
+        Item(CONJURED, sell_in, quality) for sell_in, quality, _, _ in CONJURED_CASES
+    ]
+    GildedRose(items).update_quality()
+    assert [(item.sell_in, item.quality) for item in items] == [
+        (sell_in, quality) for _, _, sell_in, quality in CONJURED_CASES
+    ]
 
 
 def test_item_repr() -> None:
