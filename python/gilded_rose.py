@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 # Main logic for Inn
 
 
