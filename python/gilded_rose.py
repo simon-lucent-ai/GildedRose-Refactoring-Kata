@@ -9,7 +9,7 @@ class GildedRose:
 
     # Silenced until update_quality is refactored.
     # pylint: disable=too-many-branches,too-many-nested-blocks,consider-using-in
-    def update_quality(self):
+    def update_quality(self) -> None:
         """Update the sell_in and quality of every item."""
 
         for item in self.items:

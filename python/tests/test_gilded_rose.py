@@ -11,24 +11,24 @@ from gilded_rose import GildedRose, Item
 # I.e. all significantly different sets of items.
 
 # Item types:
-NORMAL = "+5 Dexterity Vest"
-AGED_BRIE = "Aged Brie"
-BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert"
-SULFURAS = "Sulfuras, Hand of Ragnaros"
-CONJURED = "Conjured Mana Cake"
+NORMAL: str = "+5 Dexterity Vest"
+AGED_BRIE: str = "Aged Brie"
+BACKSTAGE_PASS: str = "Backstage passes to a TAFKAL80ETC concert"
+SULFURAS: str = "Sulfuras, Hand of Ragnaros"
+CONJURED: str = "Conjured Mana Cake"
 
 # Either side of the 10 day, 5 day and sell by date boundaries.
-SELL_INS = (11, 10, 6, 5, 1, 0, -1)
+SELL_INS: tuple[int, ...] = (11, 10, 6, 5, 1, 0, -1)
 
 # Qualities:
 # At the quality floor of 0 and ceiling of 50, and for each daily step size
 # (-1, -2, -4 and +1, +2, +3): landing exactly on the limit and overshooting it.
-QUALITIES = (0, 1, 2, 3, 4, 47, 48, 49, 50)
-SULFURAS_QUALITY = 80
+QUALITIES: tuple[int, ...] = (0, 1, 2, 3, 4, 47, 48, 49, 50)
+SULFURAS_QUALITY: int = 80
 
 # Every combination of (name, sell_in, quality) the inventory can start with.
 # Brute force coverage of all valid combinations, as quick to write and run.
-INPUTS = [
+INPUTS: list[tuple[str, int, int]] = [
     *itertools.product(
         (NORMAL, AGED_BRIE, BACKSTAGE_PASS, CONJURED), SELL_INS, QUALITIES
     ),
@@ -38,7 +38,7 @@ INPUTS = [
 # (sell_in, quality) of each item in INPUTS after one day, in the same order.
 # Recorded by running update_quality on INPUTS, as in approval testing, so these
 # describe the behaviour of the original, unrefactored, assumed to be correct code.
-EXPECTED_OUTPUTS = [
+EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (10, 0),  # +5 Dexterity Vest, sell_in=11, quality=0
     (10, 0),  # +5 Dexterity Vest, sell_in=11, quality=1
     (10, 1),  # +5 Dexterity Vest, sell_in=11, quality=2
@@ -308,7 +308,9 @@ def test_expected_outputs_match_inputs() -> None:
 
 def test_update_quality_one_day() -> None:
     """One day's update over an inventory of every input gives the expected outputs."""
-    items = [Item(name, sell_in, quality) for name, sell_in, quality in INPUTS]
+    items: list[Item] = [
+        Item(name, sell_in, quality) for name, sell_in, quality in INPUTS
+    ]
     GildedRose(items).update_quality()
     assert [(item.sell_in, item.quality) for item in items] == EXPECTED_OUTPUTS
 
