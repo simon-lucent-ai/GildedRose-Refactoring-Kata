@@ -25,6 +25,9 @@ show_missing = true
 skip_empty = true
 fail_under = 100
 
+[tool.pylint."messages control"]
+disable = ["too-few-public-methods"]
+
 [tool.pdm.scripts]
 test = "pytest"
 format = "black ."
