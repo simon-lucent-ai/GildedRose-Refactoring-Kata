@@ -1,22 +1,20 @@
 [project]
 name = "gildedrose-refactoring-kata"
-version = "0.1.0"
+version = "0.1.1"
 description = "Gilded Rose Refactoring Kata – Blend360 Assignment"
 requires-python = ">=3.10"
-dependencies = [
-    "coverage>=7.13.0",
-]
 
-[dependency-groups]
-test = [
-    "approvaltests>=16.2.1",
+dependencies = [
     "pytest>=9.0.2",
-    "pytest-approvaltests>=0.2.4",
+    "pytest-cov>=7.0.0",
+    "black>=26.5.1",
+    "pylint>=4.0.8",
+    "mypy>=2.3.1",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-ra"
+addopts = "-ra --cov=gilded_rose --cov-report=term-missing"
 
 [tool.coverage.run]
 branch = true
@@ -25,3 +23,11 @@ source = ["gilded_rose"]
 [tool.coverage.report]
 show_missing = true
 skip_empty = true
+fail_under = 100
+
+[tool.pdm.scripts]
+test = "pytest"
+format = "black ."
+lint = "pylint gilded_rose.py tests"
+typecheck = "mypy gilded_rose.py tests"
+check_all = {composite = ["black --check .", "lint", "typecheck", "test"]}
