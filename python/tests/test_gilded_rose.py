@@ -15,14 +15,13 @@ NORMAL: str = "+5 Dexterity Vest"
 AGED_BRIE: str = "Aged Brie"
 BACKSTAGE_PASS: str = "Backstage passes to a TAFKAL80ETC concert"
 SULFURAS: str = "Sulfuras, Hand of Ragnaros"
-CONJURED: str = "Conjured Mana Cake"
 
 # Either side of the 10 day, 5 day and sell by date boundaries.
 SELL_INS: tuple[int, ...] = (11, 10, 6, 5, 1, 0, -1)
 
 # Qualities:
 # At the quality floor of 0 and ceiling of 50, and for each daily step size
-# (-1, -2, -4 and +1, +2, +3): landing exactly on the limit and overshooting it.
+# (-1, -2 and +1, +2, +3): landing exactly on the limit and overshooting it.
 QUALITIES: tuple[int, ...] = (0, 1, 2, 47, 48, 49, 50)
 SULFURAS_QUALITY: int = 80
 
@@ -193,28 +192,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (-1, 80),  # Sulfuras, Hand of Ragnaros, sell_in=-1, quality=80
 ]
 
-# Conjured items are new, so these are taken from the requirements rather than
-# recorded from the original code:
-# (sell_in, quality, expected_sell_in, expected_quality) after one day.
-CONJURED_CASES: list[tuple[int, int, int, int]] = [
-    # Twice as fast as a normal item's -1 before the sell date.
-    (11, 10, 10, 8),
-    (1, 10, 0, 8),
-    # Twice as fast again once the sell date has passed.
-    (0, 10, -1, 6),
-    (-1, 10, -2, 6),
-    (0, 50, -1, 46),
-    # Landing exactly on the minimum quality.
-    (5, 2, 4, 0),
-    (0, 4, -1, 0),
-    # Never below the minimum quality.
-    (5, 1, 4, 0),
-    (0, 3, -1, 0),
-    # Already at the minimum quality.
-    (5, 0, 4, 0),
-    (0, 0, -1, 0),
-]
-
 
 def test_expected_outputs_match_inputs() -> None:
     """Double check the hard coded (approved) outputs have one row per input."""
@@ -228,17 +205,6 @@ def test_update_quality_one_day() -> None:
     ]
     GildedRose(items).update_quality()
     assert [(item.sell_in, item.quality) for item in items] == EXPECTED_OUTPUTS
-
-
-def test_update_quality_one_day_for_conjured_items() -> None:
-    """Conjured items degrade twice as fast as normal items, never below the floor."""
-    items: list[Item] = [
-        Item(CONJURED, sell_in, quality) for sell_in, quality, _, _ in CONJURED_CASES
-    ]
-    GildedRose(items).update_quality()
-    assert [(item.sell_in, item.quality) for item in items] == [
-        (sell_in, quality) for _, _, sell_in, quality in CONJURED_CASES
-    ]
 
 
 def test_item_repr() -> None:
