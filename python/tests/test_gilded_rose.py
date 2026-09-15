@@ -23,7 +23,7 @@ SELL_INS: tuple[int, ...] = (11, 10, 6, 5, 1, 0, -1)
 # Qualities:
 # At the quality floor of 0 and ceiling of 50, and for each daily step size
 # (-1, -2, -4 and +1, +2, +3): landing exactly on the limit and overshooting it.
-QUALITIES: tuple[int, ...] = (0, 1, 2, 3, 4, 47, 48, 49, 50)
+QUALITIES: tuple[int, ...] = (0, 1, 2, 47, 48, 49, 50)
 SULFURAS_QUALITY: int = 80
 
 # Every combination of (name, sell_in, quality) the inventory can start with.
@@ -40,8 +40,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (10, 0),  # +5 Dexterity Vest, sell_in=11, quality=0
     (10, 0),  # +5 Dexterity Vest, sell_in=11, quality=1
     (10, 1),  # +5 Dexterity Vest, sell_in=11, quality=2
-    (10, 2),  # +5 Dexterity Vest, sell_in=11, quality=3
-    (10, 3),  # +5 Dexterity Vest, sell_in=11, quality=4
     (10, 46),  # +5 Dexterity Vest, sell_in=11, quality=47
     (10, 47),  # +5 Dexterity Vest, sell_in=11, quality=48
     (10, 48),  # +5 Dexterity Vest, sell_in=11, quality=49
@@ -49,8 +47,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (9, 0),  # +5 Dexterity Vest, sell_in=10, quality=0
     (9, 0),  # +5 Dexterity Vest, sell_in=10, quality=1
     (9, 1),  # +5 Dexterity Vest, sell_in=10, quality=2
-    (9, 2),  # +5 Dexterity Vest, sell_in=10, quality=3
-    (9, 3),  # +5 Dexterity Vest, sell_in=10, quality=4
     (9, 46),  # +5 Dexterity Vest, sell_in=10, quality=47
     (9, 47),  # +5 Dexterity Vest, sell_in=10, quality=48
     (9, 48),  # +5 Dexterity Vest, sell_in=10, quality=49
@@ -58,8 +54,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (5, 0),  # +5 Dexterity Vest, sell_in=6, quality=0
     (5, 0),  # +5 Dexterity Vest, sell_in=6, quality=1
     (5, 1),  # +5 Dexterity Vest, sell_in=6, quality=2
-    (5, 2),  # +5 Dexterity Vest, sell_in=6, quality=3
-    (5, 3),  # +5 Dexterity Vest, sell_in=6, quality=4
     (5, 46),  # +5 Dexterity Vest, sell_in=6, quality=47
     (5, 47),  # +5 Dexterity Vest, sell_in=6, quality=48
     (5, 48),  # +5 Dexterity Vest, sell_in=6, quality=49
@@ -67,8 +61,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (4, 0),  # +5 Dexterity Vest, sell_in=5, quality=0
     (4, 0),  # +5 Dexterity Vest, sell_in=5, quality=1
     (4, 1),  # +5 Dexterity Vest, sell_in=5, quality=2
-    (4, 2),  # +5 Dexterity Vest, sell_in=5, quality=3
-    (4, 3),  # +5 Dexterity Vest, sell_in=5, quality=4
     (4, 46),  # +5 Dexterity Vest, sell_in=5, quality=47
     (4, 47),  # +5 Dexterity Vest, sell_in=5, quality=48
     (4, 48),  # +5 Dexterity Vest, sell_in=5, quality=49
@@ -76,8 +68,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (0, 0),  # +5 Dexterity Vest, sell_in=1, quality=0
     (0, 0),  # +5 Dexterity Vest, sell_in=1, quality=1
     (0, 1),  # +5 Dexterity Vest, sell_in=1, quality=2
-    (0, 2),  # +5 Dexterity Vest, sell_in=1, quality=3
-    (0, 3),  # +5 Dexterity Vest, sell_in=1, quality=4
     (0, 46),  # +5 Dexterity Vest, sell_in=1, quality=47
     (0, 47),  # +5 Dexterity Vest, sell_in=1, quality=48
     (0, 48),  # +5 Dexterity Vest, sell_in=1, quality=49
@@ -85,8 +75,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (-1, 0),  # +5 Dexterity Vest, sell_in=0, quality=0
     (-1, 0),  # +5 Dexterity Vest, sell_in=0, quality=1
     (-1, 0),  # +5 Dexterity Vest, sell_in=0, quality=2
-    (-1, 1),  # +5 Dexterity Vest, sell_in=0, quality=3
-    (-1, 2),  # +5 Dexterity Vest, sell_in=0, quality=4
     (-1, 45),  # +5 Dexterity Vest, sell_in=0, quality=47
     (-1, 46),  # +5 Dexterity Vest, sell_in=0, quality=48
     (-1, 47),  # +5 Dexterity Vest, sell_in=0, quality=49
@@ -94,8 +82,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (-2, 0),  # +5 Dexterity Vest, sell_in=-1, quality=0
     (-2, 0),  # +5 Dexterity Vest, sell_in=-1, quality=1
     (-2, 0),  # +5 Dexterity Vest, sell_in=-1, quality=2
-    (-2, 1),  # +5 Dexterity Vest, sell_in=-1, quality=3
-    (-2, 2),  # +5 Dexterity Vest, sell_in=-1, quality=4
     (-2, 45),  # +5 Dexterity Vest, sell_in=-1, quality=47
     (-2, 46),  # +5 Dexterity Vest, sell_in=-1, quality=48
     (-2, 47),  # +5 Dexterity Vest, sell_in=-1, quality=49
@@ -103,8 +89,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (10, 1),  # Aged Brie, sell_in=11, quality=0
     (10, 2),  # Aged Brie, sell_in=11, quality=1
     (10, 3),  # Aged Brie, sell_in=11, quality=2
-    (10, 4),  # Aged Brie, sell_in=11, quality=3
-    (10, 5),  # Aged Brie, sell_in=11, quality=4
     (10, 48),  # Aged Brie, sell_in=11, quality=47
     (10, 49),  # Aged Brie, sell_in=11, quality=48
     (10, 50),  # Aged Brie, sell_in=11, quality=49
@@ -112,8 +96,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (9, 1),  # Aged Brie, sell_in=10, quality=0
     (9, 2),  # Aged Brie, sell_in=10, quality=1
     (9, 3),  # Aged Brie, sell_in=10, quality=2
-    (9, 4),  # Aged Brie, sell_in=10, quality=3
-    (9, 5),  # Aged Brie, sell_in=10, quality=4
     (9, 48),  # Aged Brie, sell_in=10, quality=47
     (9, 49),  # Aged Brie, sell_in=10, quality=48
     (9, 50),  # Aged Brie, sell_in=10, quality=49
@@ -121,8 +103,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (5, 1),  # Aged Brie, sell_in=6, quality=0
     (5, 2),  # Aged Brie, sell_in=6, quality=1
     (5, 3),  # Aged Brie, sell_in=6, quality=2
-    (5, 4),  # Aged Brie, sell_in=6, quality=3
-    (5, 5),  # Aged Brie, sell_in=6, quality=4
     (5, 48),  # Aged Brie, sell_in=6, quality=47
     (5, 49),  # Aged Brie, sell_in=6, quality=48
     (5, 50),  # Aged Brie, sell_in=6, quality=49
@@ -130,8 +110,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (4, 1),  # Aged Brie, sell_in=5, quality=0
     (4, 2),  # Aged Brie, sell_in=5, quality=1
     (4, 3),  # Aged Brie, sell_in=5, quality=2
-    (4, 4),  # Aged Brie, sell_in=5, quality=3
-    (4, 5),  # Aged Brie, sell_in=5, quality=4
     (4, 48),  # Aged Brie, sell_in=5, quality=47
     (4, 49),  # Aged Brie, sell_in=5, quality=48
     (4, 50),  # Aged Brie, sell_in=5, quality=49
@@ -139,8 +117,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (0, 1),  # Aged Brie, sell_in=1, quality=0
     (0, 2),  # Aged Brie, sell_in=1, quality=1
     (0, 3),  # Aged Brie, sell_in=1, quality=2
-    (0, 4),  # Aged Brie, sell_in=1, quality=3
-    (0, 5),  # Aged Brie, sell_in=1, quality=4
     (0, 48),  # Aged Brie, sell_in=1, quality=47
     (0, 49),  # Aged Brie, sell_in=1, quality=48
     (0, 50),  # Aged Brie, sell_in=1, quality=49
@@ -148,8 +124,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (-1, 2),  # Aged Brie, sell_in=0, quality=0
     (-1, 3),  # Aged Brie, sell_in=0, quality=1
     (-1, 4),  # Aged Brie, sell_in=0, quality=2
-    (-1, 5),  # Aged Brie, sell_in=0, quality=3
-    (-1, 6),  # Aged Brie, sell_in=0, quality=4
     (-1, 49),  # Aged Brie, sell_in=0, quality=47
     (-1, 50),  # Aged Brie, sell_in=0, quality=48
     (-1, 50),  # Aged Brie, sell_in=0, quality=49
@@ -157,8 +131,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (-2, 2),  # Aged Brie, sell_in=-1, quality=0
     (-2, 3),  # Aged Brie, sell_in=-1, quality=1
     (-2, 4),  # Aged Brie, sell_in=-1, quality=2
-    (-2, 5),  # Aged Brie, sell_in=-1, quality=3
-    (-2, 6),  # Aged Brie, sell_in=-1, quality=4
     (-2, 49),  # Aged Brie, sell_in=-1, quality=47
     (-2, 50),  # Aged Brie, sell_in=-1, quality=48
     (-2, 50),  # Aged Brie, sell_in=-1, quality=49
@@ -166,8 +138,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (10, 1),  # Backstage passes to a TAFKAL80ETC concert, sell_in=11, quality=0
     (10, 2),  # Backstage passes to a TAFKAL80ETC concert, sell_in=11, quality=1
     (10, 3),  # Backstage passes to a TAFKAL80ETC concert, sell_in=11, quality=2
-    (10, 4),  # Backstage passes to a TAFKAL80ETC concert, sell_in=11, quality=3
-    (10, 5),  # Backstage passes to a TAFKAL80ETC concert, sell_in=11, quality=4
     (10, 48),  # Backstage passes to a TAFKAL80ETC concert, sell_in=11, quality=47
     (10, 49),  # Backstage passes to a TAFKAL80ETC concert, sell_in=11, quality=48
     (10, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=11, quality=49
@@ -175,8 +145,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (9, 2),  # Backstage passes to a TAFKAL80ETC concert, sell_in=10, quality=0
     (9, 3),  # Backstage passes to a TAFKAL80ETC concert, sell_in=10, quality=1
     (9, 4),  # Backstage passes to a TAFKAL80ETC concert, sell_in=10, quality=2
-    (9, 5),  # Backstage passes to a TAFKAL80ETC concert, sell_in=10, quality=3
-    (9, 6),  # Backstage passes to a TAFKAL80ETC concert, sell_in=10, quality=4
     (9, 49),  # Backstage passes to a TAFKAL80ETC concert, sell_in=10, quality=47
     (9, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=10, quality=48
     (9, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=10, quality=49
@@ -184,8 +152,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (5, 2),  # Backstage passes to a TAFKAL80ETC concert, sell_in=6, quality=0
     (5, 3),  # Backstage passes to a TAFKAL80ETC concert, sell_in=6, quality=1
     (5, 4),  # Backstage passes to a TAFKAL80ETC concert, sell_in=6, quality=2
-    (5, 5),  # Backstage passes to a TAFKAL80ETC concert, sell_in=6, quality=3
-    (5, 6),  # Backstage passes to a TAFKAL80ETC concert, sell_in=6, quality=4
     (5, 49),  # Backstage passes to a TAFKAL80ETC concert, sell_in=6, quality=47
     (5, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=6, quality=48
     (5, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=6, quality=49
@@ -193,8 +159,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (4, 3),  # Backstage passes to a TAFKAL80ETC concert, sell_in=5, quality=0
     (4, 4),  # Backstage passes to a TAFKAL80ETC concert, sell_in=5, quality=1
     (4, 5),  # Backstage passes to a TAFKAL80ETC concert, sell_in=5, quality=2
-    (4, 6),  # Backstage passes to a TAFKAL80ETC concert, sell_in=5, quality=3
-    (4, 7),  # Backstage passes to a TAFKAL80ETC concert, sell_in=5, quality=4
     (4, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=5, quality=47
     (4, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=5, quality=48
     (4, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=5, quality=49
@@ -202,8 +166,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (0, 3),  # Backstage passes to a TAFKAL80ETC concert, sell_in=1, quality=0
     (0, 4),  # Backstage passes to a TAFKAL80ETC concert, sell_in=1, quality=1
     (0, 5),  # Backstage passes to a TAFKAL80ETC concert, sell_in=1, quality=2
-    (0, 6),  # Backstage passes to a TAFKAL80ETC concert, sell_in=1, quality=3
-    (0, 7),  # Backstage passes to a TAFKAL80ETC concert, sell_in=1, quality=4
     (0, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=1, quality=47
     (0, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=1, quality=48
     (0, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=1, quality=49
@@ -211,8 +173,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (-1, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=0, quality=0
     (-1, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=0, quality=1
     (-1, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=0, quality=2
-    (-1, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=0, quality=3
-    (-1, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=0, quality=4
     (-1, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=0, quality=47
     (-1, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=0, quality=48
     (-1, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=0, quality=49
@@ -220,8 +180,6 @@ EXPECTED_OUTPUTS: list[tuple[int, int]] = [
     (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=0
     (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=1
     (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=2
-    (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=3
-    (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=4
     (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=47
     (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=48
     (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=49
@@ -246,9 +204,15 @@ CONJURED_CASES: list[tuple[int, int, int, int]] = [
     (0, 10, -1, 6),
     (-1, 10, -2, 6),
     (0, 50, -1, 46),
+    # Landing exactly on the minimum quality.
+    (5, 2, 4, 0),
+    (0, 4, -1, 0),
     # Never below the minimum quality.
     (5, 1, 4, 0),
     (0, 3, -1, 0),
+    # Already at the minimum quality.
+    (5, 0, 4, 0),
+    (0, 0, -1, 0),
 ]
 
 
