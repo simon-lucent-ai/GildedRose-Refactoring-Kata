@@ -5,7 +5,7 @@ Useful for refactoring.
 
 import itertools
 
-from gilded_rose import GildedRose, Item
+from gilded_rose import GildedRose, InnItem, Item, Sulfuras, make_item
 
 # All significantly different inputs to GildedRose.update_quality().
 # I.e. all significantly different sets of items.
@@ -23,13 +23,14 @@ SELL_INS: tuple[int, ...] = (11, 10, 6, 5, 1, 0, -1)
 # At the quality floor of 0 and ceiling of 50, and for each daily step size
 # (-1, -2 and +1, +2, +3): landing exactly on the limit and overshooting it.
 QUALITIES: tuple[int, ...] = (0, 1, 2, 47, 48, 49, 50)
-SULFURAS_QUALITY: int = 80
 
 # Every combination of (name, sell_in, quality) the inventory can start with.
 # Brute force coverage of all valid combinations, as quick to write and run.
 INPUTS: list[tuple[str, int, int]] = [
     *itertools.product((NORMAL, AGED_BRIE, BACKSTAGE_PASS), SELL_INS, QUALITIES),
-    *itertools.product((SULFURAS,), SELL_INS, (SULFURAS_QUALITY,)),
+    # The legendary item's quality comes from its own class, so the value here is
+    # only what it is built with, not what it ends up being.
+    *itertools.product((SULFURAS,), SELL_INS, (Sulfuras.QUALITY,)),
 ]
 
 # (sell_in, quality) of each item in INPUTS after one day, in the same order.
@@ -200,8 +201,8 @@ def test_expected_outputs_match_inputs() -> None:
 
 def test_update_quality_one_day() -> None:
     """One day's update over an inventory of every input gives the expected outputs."""
-    items: list[Item] = [
-        Item(name, sell_in, quality) for name, sell_in, quality in INPUTS
+    items: list[InnItem] = [
+        make_item(name, sell_in, quality) for name, sell_in, quality in INPUTS
     ]
     GildedRose(items).update_quality()
     assert [(item.sell_in, item.quality) for item in items] == EXPECTED_OUTPUTS
@@ -215,10 +216,19 @@ def test_unrecognised_names_degrade_like_normal_items() -> None:
     names that near miss a special one, such as a different case or a trailing
     space.
     """
-    vest = Item(NORMAL, 5, 7)
-    elixir = Item("Elixir of the Mongoose", 5, 7)
+    vest = make_item(NORMAL, 5, 7)
+    elixir = make_item("Elixir of the Mongoose", 5, 7)
     GildedRose([vest, elixir]).update_quality()
     assert (elixir.sell_in, elixir.quality) == (vest.sell_in, vest.quality)
+
+
+def test_sulfuras_quality_comes_from_its_name() -> None:
+    """The legendary item is worth 80 whatever quality it is built with.
+
+    The recorded cases cannot show this, as every Sulfuras row in INPUTS
+    already starts at 80.
+    """
+    assert make_item(SULFURAS, 5, 20).quality == 80
 
 
 def test_item_repr() -> None:

@@ -4,7 +4,7 @@ Unlike the refactoring tests, these expectations come from
 GildedRoseRequirements.md, as the original code had no conjured items to record.
 """
 
-from gilded_rose import GildedRose, Item
+from gilded_rose import GildedRose, InnItem, make_item
 
 # Item type:
 CONJURED: str = "Conjured Mana Cake"
@@ -32,10 +32,23 @@ CONJURED_CASES: list[tuple[int, int, int, int]] = [
 
 def test_update_quality_one_day_for_conjured_items() -> None:
     """Conjured items degrade twice as fast as normal items, never below the floor."""
-    items: list[Item] = [
-        Item(CONJURED, sell_in, quality) for sell_in, quality, _, _ in CONJURED_CASES
+    items: list[InnItem] = [
+        make_item(CONJURED, sell_in, quality)
+        for sell_in, quality, _, _ in CONJURED_CASES
     ]
     GildedRose(items).update_quality()
     assert [(item.sell_in, item.quality) for item in items] == [
         (sell_in, quality) for _, _, sell_in, quality in CONJURED_CASES
     ]
+
+
+def test_conjured_is_a_category_rather_than_one_product() -> None:
+    """Any name starting with Conjured follows the conjured rules.
+
+    The requirements describe conjured items as a category, so a second
+    conjured product must behave exactly like the one used above.
+    """
+    cake = make_item(CONJURED, 3, 6)
+    sword = make_item("Conjured Sword", 3, 6)
+    GildedRose([cake, sword]).update_quality()
+    assert (sword.sell_in, sword.quality) == (cake.sell_in, cake.quality)
