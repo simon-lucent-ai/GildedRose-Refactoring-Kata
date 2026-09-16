@@ -3,17 +3,17 @@
 from collections.abc import Sequence
 from typing import Protocol
 
-MIN_QUALITY = 0
-MAX_QUALITY = 50
+AGED_BRIE = "Aged Brie"
+BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert"
+SULFURAS = "Sulfuras, Hand of Ragnaros"
+CONJURED = "Conjured Mana Cake"
 
 # Days left when a backstage pass starts gaining more than one quality a day.
 BACKSTAGE_PASS_DOUBLE_DAYS = 10
 BACKSTAGE_PASS_TRIPLE_DAYS = 5
 
-AGED_BRIE = "Aged Brie"
-BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert"
-SULFURAS = "Sulfuras, Hand of Ragnaros"
-CONJURED = "Conjured Mana Cake"
+MIN_QUALITY = 0
+MAX_QUALITY = 50
 
 
 class ItemLike(Protocol):
@@ -80,13 +80,13 @@ def _backstage_pass_change(item: ItemLike, past_sell_date: bool) -> int:
 
 
 # The Item class belongs to the goblin and must not be altered, so its warnings
-# are silenced instead of fixed.
-# pylint: disable=missing-class-docstring,consider-using-f-string
-class Item:
-    def __init__(self, name, sell_in, quality):
+# are silenced instead of fixed. The disables sit on the class line so that they
+# cover this class only, rather than everything after it in the file.
+class Item:  # pylint: disable=missing-class-docstring,consider-using-f-string
+    def __init__(self, name, sell_in, quality):  # type: ignore[no-untyped-def]
         self.name = name
         self.sell_in = sell_in
         self.quality = quality
 
-    def __repr__(self):
+    def __repr__(self):  # type: ignore[no-untyped-def]
         return "%s, %s, %s" % (self.name, self.sell_in, self.quality)
