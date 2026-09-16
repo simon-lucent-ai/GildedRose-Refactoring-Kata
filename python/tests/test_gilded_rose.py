@@ -7,9 +7,6 @@ import itertools
 
 from gilded_rose import GildedRose, InnItem, Item, Sulfuras, make_item
 
-# All significantly different inputs to GildedRose.update_quality().
-# I.e. all significantly different sets of items.
-
 # Item types:
 NORMAL: str = "+5 Dexterity Vest"
 AGED_BRIE: str = "Aged Brie"
@@ -24,11 +21,13 @@ SELL_INS: tuple[int, ...] = (11, 10, 6, 5, 1, 0, -1)
 # (-1, -2 and +1, +2, +3): landing exactly on the limit and overshooting it.
 QUALITIES: tuple[int, ...] = (0, 1, 2, 47, 48, 49, 50)
 
-# Every case, as what an item starts the day with and what it ends it with:
-# (name, sell_in, quality, expected_sell_in, expected_quality).
-# The starting values are every combination of the lists above. The expected
-# values were recorded by running the original code, as in approval testing,
-# so they describe the behaviour of the unrefactored, assumed correct code.
+# Every significantly different case, as what an item starts the day with and
+# what it ends it with: (name, sell_in, quality, expected_sell_in,
+# expected_quality). The starting values are every combination of the lists
+# above, so between them they cover every significantly different set of items
+# GildedRose.update_quality() can be given. The expected values were recorded by
+# running the original code, as in approval testing, so they describe the
+# behaviour of the unrefactored, assumed to be correct code.
 CASES: list[tuple[str, int, int, int, int]] = [
     # Ordinary stock: -1 a day, -2 once the sell date has passed.
     (NORMAL, 11, 0, 10, 0),
