@@ -24,188 +24,196 @@ SELL_INS: tuple[int, ...] = (11, 10, 6, 5, 1, 0, -1)
 # (-1, -2 and +1, +2, +3): landing exactly on the limit and overshooting it.
 QUALITIES: tuple[int, ...] = (0, 1, 2, 47, 48, 49, 50)
 
-# Every combination of (name, sell_in, quality) the inventory can start with.
-# Brute force coverage of all valid combinations, as quick to write and run.
-INPUTS: list[tuple[str, int, int]] = [
-    *itertools.product((NORMAL, AGED_BRIE, BACKSTAGE_PASS), SELL_INS, QUALITIES),
-    # The legendary item's quality comes from its own class, so the value here is
-    # only what it is built with, not what it ends up being.
-    *itertools.product((SULFURAS,), SELL_INS, (Sulfuras.QUALITY,)),
-]
-
-# (sell_in, quality) of each item in INPUTS after one day, in the same order.
-# Recorded by running update_quality on INPUTS, as in approval testing, so these
-# describe the behaviour of the original, unrefactored, assumed to be correct code.
-EXPECTED_OUTPUTS: list[tuple[int, int]] = [
-    (10, 0),  # +5 Dexterity Vest, sell_in=11, quality=0
-    (10, 0),  # +5 Dexterity Vest, sell_in=11, quality=1
-    (10, 1),  # +5 Dexterity Vest, sell_in=11, quality=2
-    (10, 46),  # +5 Dexterity Vest, sell_in=11, quality=47
-    (10, 47),  # +5 Dexterity Vest, sell_in=11, quality=48
-    (10, 48),  # +5 Dexterity Vest, sell_in=11, quality=49
-    (10, 49),  # +5 Dexterity Vest, sell_in=11, quality=50
-    (9, 0),  # +5 Dexterity Vest, sell_in=10, quality=0
-    (9, 0),  # +5 Dexterity Vest, sell_in=10, quality=1
-    (9, 1),  # +5 Dexterity Vest, sell_in=10, quality=2
-    (9, 46),  # +5 Dexterity Vest, sell_in=10, quality=47
-    (9, 47),  # +5 Dexterity Vest, sell_in=10, quality=48
-    (9, 48),  # +5 Dexterity Vest, sell_in=10, quality=49
-    (9, 49),  # +5 Dexterity Vest, sell_in=10, quality=50
-    (5, 0),  # +5 Dexterity Vest, sell_in=6, quality=0
-    (5, 0),  # +5 Dexterity Vest, sell_in=6, quality=1
-    (5, 1),  # +5 Dexterity Vest, sell_in=6, quality=2
-    (5, 46),  # +5 Dexterity Vest, sell_in=6, quality=47
-    (5, 47),  # +5 Dexterity Vest, sell_in=6, quality=48
-    (5, 48),  # +5 Dexterity Vest, sell_in=6, quality=49
-    (5, 49),  # +5 Dexterity Vest, sell_in=6, quality=50
-    (4, 0),  # +5 Dexterity Vest, sell_in=5, quality=0
-    (4, 0),  # +5 Dexterity Vest, sell_in=5, quality=1
-    (4, 1),  # +5 Dexterity Vest, sell_in=5, quality=2
-    (4, 46),  # +5 Dexterity Vest, sell_in=5, quality=47
-    (4, 47),  # +5 Dexterity Vest, sell_in=5, quality=48
-    (4, 48),  # +5 Dexterity Vest, sell_in=5, quality=49
-    (4, 49),  # +5 Dexterity Vest, sell_in=5, quality=50
-    (0, 0),  # +5 Dexterity Vest, sell_in=1, quality=0
-    (0, 0),  # +5 Dexterity Vest, sell_in=1, quality=1
-    (0, 1),  # +5 Dexterity Vest, sell_in=1, quality=2
-    (0, 46),  # +5 Dexterity Vest, sell_in=1, quality=47
-    (0, 47),  # +5 Dexterity Vest, sell_in=1, quality=48
-    (0, 48),  # +5 Dexterity Vest, sell_in=1, quality=49
-    (0, 49),  # +5 Dexterity Vest, sell_in=1, quality=50
-    (-1, 0),  # +5 Dexterity Vest, sell_in=0, quality=0
-    (-1, 0),  # +5 Dexterity Vest, sell_in=0, quality=1
-    (-1, 0),  # +5 Dexterity Vest, sell_in=0, quality=2
-    (-1, 45),  # +5 Dexterity Vest, sell_in=0, quality=47
-    (-1, 46),  # +5 Dexterity Vest, sell_in=0, quality=48
-    (-1, 47),  # +5 Dexterity Vest, sell_in=0, quality=49
-    (-1, 48),  # +5 Dexterity Vest, sell_in=0, quality=50
-    (-2, 0),  # +5 Dexterity Vest, sell_in=-1, quality=0
-    (-2, 0),  # +5 Dexterity Vest, sell_in=-1, quality=1
-    (-2, 0),  # +5 Dexterity Vest, sell_in=-1, quality=2
-    (-2, 45),  # +5 Dexterity Vest, sell_in=-1, quality=47
-    (-2, 46),  # +5 Dexterity Vest, sell_in=-1, quality=48
-    (-2, 47),  # +5 Dexterity Vest, sell_in=-1, quality=49
-    (-2, 48),  # +5 Dexterity Vest, sell_in=-1, quality=50
-    (10, 1),  # Aged Brie, sell_in=11, quality=0
-    (10, 2),  # Aged Brie, sell_in=11, quality=1
-    (10, 3),  # Aged Brie, sell_in=11, quality=2
-    (10, 48),  # Aged Brie, sell_in=11, quality=47
-    (10, 49),  # Aged Brie, sell_in=11, quality=48
-    (10, 50),  # Aged Brie, sell_in=11, quality=49
-    (10, 50),  # Aged Brie, sell_in=11, quality=50
-    (9, 1),  # Aged Brie, sell_in=10, quality=0
-    (9, 2),  # Aged Brie, sell_in=10, quality=1
-    (9, 3),  # Aged Brie, sell_in=10, quality=2
-    (9, 48),  # Aged Brie, sell_in=10, quality=47
-    (9, 49),  # Aged Brie, sell_in=10, quality=48
-    (9, 50),  # Aged Brie, sell_in=10, quality=49
-    (9, 50),  # Aged Brie, sell_in=10, quality=50
-    (5, 1),  # Aged Brie, sell_in=6, quality=0
-    (5, 2),  # Aged Brie, sell_in=6, quality=1
-    (5, 3),  # Aged Brie, sell_in=6, quality=2
-    (5, 48),  # Aged Brie, sell_in=6, quality=47
-    (5, 49),  # Aged Brie, sell_in=6, quality=48
-    (5, 50),  # Aged Brie, sell_in=6, quality=49
-    (5, 50),  # Aged Brie, sell_in=6, quality=50
-    (4, 1),  # Aged Brie, sell_in=5, quality=0
-    (4, 2),  # Aged Brie, sell_in=5, quality=1
-    (4, 3),  # Aged Brie, sell_in=5, quality=2
-    (4, 48),  # Aged Brie, sell_in=5, quality=47
-    (4, 49),  # Aged Brie, sell_in=5, quality=48
-    (4, 50),  # Aged Brie, sell_in=5, quality=49
-    (4, 50),  # Aged Brie, sell_in=5, quality=50
-    (0, 1),  # Aged Brie, sell_in=1, quality=0
-    (0, 2),  # Aged Brie, sell_in=1, quality=1
-    (0, 3),  # Aged Brie, sell_in=1, quality=2
-    (0, 48),  # Aged Brie, sell_in=1, quality=47
-    (0, 49),  # Aged Brie, sell_in=1, quality=48
-    (0, 50),  # Aged Brie, sell_in=1, quality=49
-    (0, 50),  # Aged Brie, sell_in=1, quality=50
-    (-1, 2),  # Aged Brie, sell_in=0, quality=0
-    (-1, 3),  # Aged Brie, sell_in=0, quality=1
-    (-1, 4),  # Aged Brie, sell_in=0, quality=2
-    (-1, 49),  # Aged Brie, sell_in=0, quality=47
-    (-1, 50),  # Aged Brie, sell_in=0, quality=48
-    (-1, 50),  # Aged Brie, sell_in=0, quality=49
-    (-1, 50),  # Aged Brie, sell_in=0, quality=50
-    (-2, 2),  # Aged Brie, sell_in=-1, quality=0
-    (-2, 3),  # Aged Brie, sell_in=-1, quality=1
-    (-2, 4),  # Aged Brie, sell_in=-1, quality=2
-    (-2, 49),  # Aged Brie, sell_in=-1, quality=47
-    (-2, 50),  # Aged Brie, sell_in=-1, quality=48
-    (-2, 50),  # Aged Brie, sell_in=-1, quality=49
-    (-2, 50),  # Aged Brie, sell_in=-1, quality=50
-    (10, 1),  # Backstage passes to a TAFKAL80ETC concert, sell_in=11, quality=0
-    (10, 2),  # Backstage passes to a TAFKAL80ETC concert, sell_in=11, quality=1
-    (10, 3),  # Backstage passes to a TAFKAL80ETC concert, sell_in=11, quality=2
-    (10, 48),  # Backstage passes to a TAFKAL80ETC concert, sell_in=11, quality=47
-    (10, 49),  # Backstage passes to a TAFKAL80ETC concert, sell_in=11, quality=48
-    (10, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=11, quality=49
-    (10, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=11, quality=50
-    (9, 2),  # Backstage passes to a TAFKAL80ETC concert, sell_in=10, quality=0
-    (9, 3),  # Backstage passes to a TAFKAL80ETC concert, sell_in=10, quality=1
-    (9, 4),  # Backstage passes to a TAFKAL80ETC concert, sell_in=10, quality=2
-    (9, 49),  # Backstage passes to a TAFKAL80ETC concert, sell_in=10, quality=47
-    (9, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=10, quality=48
-    (9, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=10, quality=49
-    (9, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=10, quality=50
-    (5, 2),  # Backstage passes to a TAFKAL80ETC concert, sell_in=6, quality=0
-    (5, 3),  # Backstage passes to a TAFKAL80ETC concert, sell_in=6, quality=1
-    (5, 4),  # Backstage passes to a TAFKAL80ETC concert, sell_in=6, quality=2
-    (5, 49),  # Backstage passes to a TAFKAL80ETC concert, sell_in=6, quality=47
-    (5, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=6, quality=48
-    (5, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=6, quality=49
-    (5, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=6, quality=50
-    (4, 3),  # Backstage passes to a TAFKAL80ETC concert, sell_in=5, quality=0
-    (4, 4),  # Backstage passes to a TAFKAL80ETC concert, sell_in=5, quality=1
-    (4, 5),  # Backstage passes to a TAFKAL80ETC concert, sell_in=5, quality=2
-    (4, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=5, quality=47
-    (4, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=5, quality=48
-    (4, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=5, quality=49
-    (4, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=5, quality=50
-    (0, 3),  # Backstage passes to a TAFKAL80ETC concert, sell_in=1, quality=0
-    (0, 4),  # Backstage passes to a TAFKAL80ETC concert, sell_in=1, quality=1
-    (0, 5),  # Backstage passes to a TAFKAL80ETC concert, sell_in=1, quality=2
-    (0, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=1, quality=47
-    (0, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=1, quality=48
-    (0, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=1, quality=49
-    (0, 50),  # Backstage passes to a TAFKAL80ETC concert, sell_in=1, quality=50
-    (-1, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=0, quality=0
-    (-1, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=0, quality=1
-    (-1, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=0, quality=2
-    (-1, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=0, quality=47
-    (-1, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=0, quality=48
-    (-1, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=0, quality=49
-    (-1, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=0, quality=50
-    (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=0
-    (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=1
-    (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=2
-    (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=47
-    (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=48
-    (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=49
-    (-2, 0),  # Backstage passes to a TAFKAL80ETC concert, sell_in=-1, quality=50
-    (11, 80),  # Sulfuras, Hand of Ragnaros, sell_in=11, quality=80
-    (10, 80),  # Sulfuras, Hand of Ragnaros, sell_in=10, quality=80
-    (6, 80),  # Sulfuras, Hand of Ragnaros, sell_in=6, quality=80
-    (5, 80),  # Sulfuras, Hand of Ragnaros, sell_in=5, quality=80
-    (1, 80),  # Sulfuras, Hand of Ragnaros, sell_in=1, quality=80
-    (0, 80),  # Sulfuras, Hand of Ragnaros, sell_in=0, quality=80
-    (-1, 80),  # Sulfuras, Hand of Ragnaros, sell_in=-1, quality=80
+# Every case, as what an item starts the day with and what it ends it with:
+# (name, sell_in, quality, expected_sell_in, expected_quality).
+# The starting values are every combination of the lists above. The expected
+# values were recorded by running the original code, as in approval testing,
+# so they describe the behaviour of the unrefactored, assumed correct code.
+CASES: list[tuple[str, int, int, int, int]] = [
+    # Ordinary stock: -1 a day, -2 once the sell date has passed.
+    (NORMAL, 11, 0, 10, 0),
+    (NORMAL, 11, 1, 10, 0),
+    (NORMAL, 11, 2, 10, 1),
+    (NORMAL, 11, 47, 10, 46),
+    (NORMAL, 11, 48, 10, 47),
+    (NORMAL, 11, 49, 10, 48),
+    (NORMAL, 11, 50, 10, 49),
+    (NORMAL, 10, 0, 9, 0),
+    (NORMAL, 10, 1, 9, 0),
+    (NORMAL, 10, 2, 9, 1),
+    (NORMAL, 10, 47, 9, 46),
+    (NORMAL, 10, 48, 9, 47),
+    (NORMAL, 10, 49, 9, 48),
+    (NORMAL, 10, 50, 9, 49),
+    (NORMAL, 6, 0, 5, 0),
+    (NORMAL, 6, 1, 5, 0),
+    (NORMAL, 6, 2, 5, 1),
+    (NORMAL, 6, 47, 5, 46),
+    (NORMAL, 6, 48, 5, 47),
+    (NORMAL, 6, 49, 5, 48),
+    (NORMAL, 6, 50, 5, 49),
+    (NORMAL, 5, 0, 4, 0),
+    (NORMAL, 5, 1, 4, 0),
+    (NORMAL, 5, 2, 4, 1),
+    (NORMAL, 5, 47, 4, 46),
+    (NORMAL, 5, 48, 4, 47),
+    (NORMAL, 5, 49, 4, 48),
+    (NORMAL, 5, 50, 4, 49),
+    (NORMAL, 1, 0, 0, 0),
+    (NORMAL, 1, 1, 0, 0),
+    (NORMAL, 1, 2, 0, 1),
+    (NORMAL, 1, 47, 0, 46),
+    (NORMAL, 1, 48, 0, 47),
+    (NORMAL, 1, 49, 0, 48),
+    (NORMAL, 1, 50, 0, 49),
+    (NORMAL, 0, 0, -1, 0),
+    (NORMAL, 0, 1, -1, 0),
+    (NORMAL, 0, 2, -1, 0),
+    (NORMAL, 0, 47, -1, 45),
+    (NORMAL, 0, 48, -1, 46),
+    (NORMAL, 0, 49, -1, 47),
+    (NORMAL, 0, 50, -1, 48),
+    (NORMAL, -1, 0, -2, 0),
+    (NORMAL, -1, 1, -2, 0),
+    (NORMAL, -1, 2, -2, 0),
+    (NORMAL, -1, 47, -2, 45),
+    (NORMAL, -1, 48, -2, 46),
+    (NORMAL, -1, 49, -2, 47),
+    (NORMAL, -1, 50, -2, 48),
+    # Aged Brie: +1 a day, +2 once the sell date has passed.
+    (AGED_BRIE, 11, 0, 10, 1),
+    (AGED_BRIE, 11, 1, 10, 2),
+    (AGED_BRIE, 11, 2, 10, 3),
+    (AGED_BRIE, 11, 47, 10, 48),
+    (AGED_BRIE, 11, 48, 10, 49),
+    (AGED_BRIE, 11, 49, 10, 50),
+    (AGED_BRIE, 11, 50, 10, 50),
+    (AGED_BRIE, 10, 0, 9, 1),
+    (AGED_BRIE, 10, 1, 9, 2),
+    (AGED_BRIE, 10, 2, 9, 3),
+    (AGED_BRIE, 10, 47, 9, 48),
+    (AGED_BRIE, 10, 48, 9, 49),
+    (AGED_BRIE, 10, 49, 9, 50),
+    (AGED_BRIE, 10, 50, 9, 50),
+    (AGED_BRIE, 6, 0, 5, 1),
+    (AGED_BRIE, 6, 1, 5, 2),
+    (AGED_BRIE, 6, 2, 5, 3),
+    (AGED_BRIE, 6, 47, 5, 48),
+    (AGED_BRIE, 6, 48, 5, 49),
+    (AGED_BRIE, 6, 49, 5, 50),
+    (AGED_BRIE, 6, 50, 5, 50),
+    (AGED_BRIE, 5, 0, 4, 1),
+    (AGED_BRIE, 5, 1, 4, 2),
+    (AGED_BRIE, 5, 2, 4, 3),
+    (AGED_BRIE, 5, 47, 4, 48),
+    (AGED_BRIE, 5, 48, 4, 49),
+    (AGED_BRIE, 5, 49, 4, 50),
+    (AGED_BRIE, 5, 50, 4, 50),
+    (AGED_BRIE, 1, 0, 0, 1),
+    (AGED_BRIE, 1, 1, 0, 2),
+    (AGED_BRIE, 1, 2, 0, 3),
+    (AGED_BRIE, 1, 47, 0, 48),
+    (AGED_BRIE, 1, 48, 0, 49),
+    (AGED_BRIE, 1, 49, 0, 50),
+    (AGED_BRIE, 1, 50, 0, 50),
+    (AGED_BRIE, 0, 0, -1, 2),
+    (AGED_BRIE, 0, 1, -1, 3),
+    (AGED_BRIE, 0, 2, -1, 4),
+    (AGED_BRIE, 0, 47, -1, 49),
+    (AGED_BRIE, 0, 48, -1, 50),
+    (AGED_BRIE, 0, 49, -1, 50),
+    (AGED_BRIE, 0, 50, -1, 50),
+    (AGED_BRIE, -1, 0, -2, 2),
+    (AGED_BRIE, -1, 1, -2, 3),
+    (AGED_BRIE, -1, 2, -2, 4),
+    (AGED_BRIE, -1, 47, -2, 49),
+    (AGED_BRIE, -1, 48, -2, 50),
+    (AGED_BRIE, -1, 49, -2, 50),
+    (AGED_BRIE, -1, 50, -2, 50),
+    # Backstage passes: +1, +2 from 10 days, +3 from 5, then worthless.
+    (BACKSTAGE_PASS, 11, 0, 10, 1),
+    (BACKSTAGE_PASS, 11, 1, 10, 2),
+    (BACKSTAGE_PASS, 11, 2, 10, 3),
+    (BACKSTAGE_PASS, 11, 47, 10, 48),
+    (BACKSTAGE_PASS, 11, 48, 10, 49),
+    (BACKSTAGE_PASS, 11, 49, 10, 50),
+    (BACKSTAGE_PASS, 11, 50, 10, 50),
+    (BACKSTAGE_PASS, 10, 0, 9, 2),
+    (BACKSTAGE_PASS, 10, 1, 9, 3),
+    (BACKSTAGE_PASS, 10, 2, 9, 4),
+    (BACKSTAGE_PASS, 10, 47, 9, 49),
+    (BACKSTAGE_PASS, 10, 48, 9, 50),
+    (BACKSTAGE_PASS, 10, 49, 9, 50),
+    (BACKSTAGE_PASS, 10, 50, 9, 50),
+    (BACKSTAGE_PASS, 6, 0, 5, 2),
+    (BACKSTAGE_PASS, 6, 1, 5, 3),
+    (BACKSTAGE_PASS, 6, 2, 5, 4),
+    (BACKSTAGE_PASS, 6, 47, 5, 49),
+    (BACKSTAGE_PASS, 6, 48, 5, 50),
+    (BACKSTAGE_PASS, 6, 49, 5, 50),
+    (BACKSTAGE_PASS, 6, 50, 5, 50),
+    (BACKSTAGE_PASS, 5, 0, 4, 3),
+    (BACKSTAGE_PASS, 5, 1, 4, 4),
+    (BACKSTAGE_PASS, 5, 2, 4, 5),
+    (BACKSTAGE_PASS, 5, 47, 4, 50),
+    (BACKSTAGE_PASS, 5, 48, 4, 50),
+    (BACKSTAGE_PASS, 5, 49, 4, 50),
+    (BACKSTAGE_PASS, 5, 50, 4, 50),
+    (BACKSTAGE_PASS, 1, 0, 0, 3),
+    (BACKSTAGE_PASS, 1, 1, 0, 4),
+    (BACKSTAGE_PASS, 1, 2, 0, 5),
+    (BACKSTAGE_PASS, 1, 47, 0, 50),
+    (BACKSTAGE_PASS, 1, 48, 0, 50),
+    (BACKSTAGE_PASS, 1, 49, 0, 50),
+    (BACKSTAGE_PASS, 1, 50, 0, 50),
+    (BACKSTAGE_PASS, 0, 0, -1, 0),
+    (BACKSTAGE_PASS, 0, 1, -1, 0),
+    (BACKSTAGE_PASS, 0, 2, -1, 0),
+    (BACKSTAGE_PASS, 0, 47, -1, 0),
+    (BACKSTAGE_PASS, 0, 48, -1, 0),
+    (BACKSTAGE_PASS, 0, 49, -1, 0),
+    (BACKSTAGE_PASS, 0, 50, -1, 0),
+    (BACKSTAGE_PASS, -1, 0, -2, 0),
+    (BACKSTAGE_PASS, -1, 1, -2, 0),
+    (BACKSTAGE_PASS, -1, 2, -2, 0),
+    (BACKSTAGE_PASS, -1, 47, -2, 0),
+    (BACKSTAGE_PASS, -1, 48, -2, 0),
+    (BACKSTAGE_PASS, -1, 49, -2, 0),
+    (BACKSTAGE_PASS, -1, 50, -2, 0),
+    # Sulfuras: never changes, and its quality comes from its own class.
+    (SULFURAS, 11, Sulfuras.QUALITY, 11, 80),
+    (SULFURAS, 10, Sulfuras.QUALITY, 10, 80),
+    (SULFURAS, 6, Sulfuras.QUALITY, 6, 80),
+    (SULFURAS, 5, Sulfuras.QUALITY, 5, 80),
+    (SULFURAS, 1, Sulfuras.QUALITY, 1, 80),
+    (SULFURAS, 0, Sulfuras.QUALITY, 0, 80),
+    (SULFURAS, -1, Sulfuras.QUALITY, -1, 80),
 ]
 
 
-def test_expected_outputs_match_inputs() -> None:
-    """Double check the hard coded (approved) outputs have one row per input."""
-    assert len(EXPECTED_OUTPUTS) == len(INPUTS)
+def test_cases_cover_every_combination() -> None:
+    """Double check the hard coded cases are exactly what they claim to cover.
+
+    Guards the test data itself: a case left out would otherwise go unnoticed.
+    """
+    combinations = {
+        *itertools.product((NORMAL, AGED_BRIE, BACKSTAGE_PASS), SELL_INS, QUALITIES),
+        *itertools.product((SULFURAS,), SELL_INS, (Sulfuras.QUALITY,)),
+    }
+    starts = [(name, sell_in, quality) for name, sell_in, quality, _, _ in CASES]
+    assert set(starts) == combinations
+    assert len(starts) == len(combinations)  # no case written twice
 
 
 def test_update_quality_one_day() -> None:
-    """One day's update over an inventory of every input gives the expected outputs."""
+    """One day's update over an inventory of every case gives the expected values."""
     items: list[InnItem] = [
-        make_item(name, sell_in, quality) for name, sell_in, quality in INPUTS
+        make_item(name, sell_in, quality) for name, sell_in, quality, _, _ in CASES
     ]
     GildedRose(items).update_quality()
-    assert [(item.sell_in, item.quality) for item in items] == EXPECTED_OUTPUTS
+    assert [(item.sell_in, item.quality) for item in items] == [
+        (sell_in, quality) for _, _, _, sell_in, quality in CASES
+    ]
 
 
 def test_unrecognised_names_degrade_like_normal_items() -> None:
@@ -225,7 +233,7 @@ def test_unrecognised_names_degrade_like_normal_items() -> None:
 def test_sulfuras_quality_comes_from_its_name() -> None:
     """The legendary item is worth 80 whatever quality it is built with.
 
-    The recorded cases cannot show this, as every Sulfuras row in INPUTS
+    The recorded cases cannot show this, as every Sulfuras row in CASES
     already starts at 80.
     """
     assert make_item(SULFURAS, 5, 20).quality == 80
