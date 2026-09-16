@@ -207,6 +207,20 @@ def test_update_quality_one_day() -> None:
     assert [(item.sell_in, item.quality) for item in items] == EXPECTED_OUTPUTS
 
 
+def test_unrecognised_names_degrade_like_normal_items() -> None:
+    """A second ordinary name is treated the same as the one used elsewhere.
+
+    Guards against a refactor that looks each name up in a table and handles
+    only the ordinary name the other tests happen to use. It says nothing about
+    names that near miss a special one, such as a different case or a trailing
+    space.
+    """
+    vest = Item(NORMAL, 5, 7)
+    elixir = Item("Elixir of the Mongoose", 5, 7)
+    GildedRose([vest, elixir]).update_quality()
+    assert (elixir.sell_in, elixir.quality) == (vest.sell_in, vest.quality)
+
+
 def test_item_repr() -> None:
     """Items describe themselves as name, sell_in and quality."""
     assert repr(Item(AGED_BRIE, 2, 0)) == "Aged Brie, 2, 0"
