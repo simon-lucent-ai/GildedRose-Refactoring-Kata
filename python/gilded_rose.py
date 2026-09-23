@@ -80,7 +80,7 @@ class AgedBrie(AgingItem):
     Aged Brie gains quality with age, rather than losing it.
 
     Explicitally:  The quality also increases faster after the sell by date.
-    The requirement was not explicit about this.
+    The requirement was not explicit about this but the original code behaved in this way.
     """
 
     DISPLAY_NAME_SEED = "Aged Brie"
