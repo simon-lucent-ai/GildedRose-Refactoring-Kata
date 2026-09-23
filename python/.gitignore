@@ -1,6 +1,8 @@
 *.pyc
-.cache
+__pycache__/
+.pytest_cache
 .coverage
-.idea/
-*.iml
-uv.lock
+htmlcov/
+.venv/
+*.egg-info/
+.pdm*
