@@ -26,8 +26,7 @@ class Item:  # pylint: disable=missing-class-docstring,consider-using-f-string
 class InnItem(Item, ABC):
     """Anything in the inn's stock, which a day may or may not change."""
 
-    # The exact name of the product this class is for.
-    NAME: ClassVar[str]
+    DISPLAY_NAME_SEED: ClassVar[str]
 
     @abstractmethod
     def update(self) -> None:
@@ -58,10 +57,13 @@ class AgingItem(InnItem, ABC):
 
     @property
     def _past_sell_date(self) -> bool:
-        """Whether the sell by date has already gone."""
+        """
+        Whether the sell by date has already gone.
 
-        # bool() because sell_in comes from the goblin's untyped class, so the
-        # comparison is Any as far as the type checker is concerned.
+        bool() because sell_in comes from the goblin's untyped class, so the
+        comparison is Any as far as the type checker is concerned.
+        """
+
         return bool(self.sell_in <= 0)
 
 
@@ -69,7 +71,7 @@ class NormalItem(AgingItem):
     """An ordinary item, which loses quality as it ages."""
 
     def _quality_change(self) -> int:
-        # Once the sell by date has passed, `Quality` degrades twice as fast.
+        """Once the sell by date has passed, `Quality` degrades twice as fast."""
         return -2 if self._past_sell_date else -1
 
 
@@ -78,26 +80,32 @@ class AgedBrie(AgingItem):
     Aged Brie gains quality with age, rather than losing it.
 
     Explicitally:  The quality also increases faster after the sell by date.
+    The requirement was not explicit about this.
     """
 
-    NAME = "Aged Brie"
+    DISPLAY_NAME_SEED = "Aged Brie"
 
     def _quality_change(self) -> int:
         return 2 if self._past_sell_date else 1
 
 
 class BackstagePass(AgingItem):
-    """A backstage pass gains quality as its concert nears, then is worthless."""
+    """
+    A backstage pass gains quality as its concert nears,
+    then is worthless so change to zero after that.
 
-    NAME = "Backstage passes to a TAFKAL80ETC concert"
+    There are two thresholds for days left,
+    at or below which the pass gains a different quality a day.
+    """
 
-    # Days left at or below which the pass gains that much quality a day.
+    DISPLAY_NAME_SEED = "Backstage passes to a TAFKAL80ETC concert"
+
     GAINS_TWO_FROM = 10
     GAINS_THREE_FROM = 5
 
     def _quality_change(self) -> int:
         if self._past_sell_date:
-            return -self.quality  # Worthless after the concert so change to zero.
+            return -self.quality
         if self.sell_in <= self.GAINS_THREE_FROM:
             return 3
         if self.sell_in <= self.GAINS_TWO_FROM:
@@ -106,26 +114,28 @@ class BackstagePass(AgingItem):
 
 
 class Conjured(NormalItem):
-    """Conjured stock degrades twice as fast as ordinary stock.
+    """
+    Conjured stock degrades twice as fast as ordinary stock.
 
     The requirements describe conjured items as a category rather than a single
     product, so any name starting with NAME_PREFIX is conjured.
     """
 
-    NAME_PREFIX = "Conjured"
+    DISPLAY_NAME_SEED = "Conjured"
 
     def _quality_change(self) -> int:
         return 2 * super()._quality_change()
 
 
 class Sulfuras(InnItem):
-    """Sulfuras is a legendary InnItem: it never has to be sold and never changes.
+    """
+    Sulfuras is a legendary InnItem: it never has to be sold and never changes.
 
     Its quality belongs to the item itself rather than assigned, so the
     caller gives only a name and a sell_in.
     """
 
-    NAME = "Sulfuras, Hand of Ragnaros"
+    DISPLAY_NAME_SEED = "Sulfuras, Hand of Ragnaros"
     QUALITY = 80
 
     def __init__(self, name: str, sell_in: int, _quality: int = QUALITY) -> None:
@@ -137,14 +147,14 @@ class Sulfuras(InnItem):
         """Leave the item exactly as it is."""
 
 
-# The one product names with rules of their own.
 _ITEM_CLASSES: dict[str, type[InnItem]] = {
-    cls.NAME: cls for cls in (AgedBrie, BackstagePass, Sulfuras)
+    cls.DISPLAY_NAME_SEED: cls for cls in (AgedBrie, BackstagePass, Sulfuras)
 }
 
 
 def make_item(name: str, sell_in: int, quality: int) -> InnItem:
-    """Build the right kind of item for a name.
+    """
+    Build the right kind of item for a name.
 
     Conjured stock is a category, so it is matched on the start of the name.
     Any other name the inn does not know is an ordinary item.
@@ -152,7 +162,7 @@ def make_item(name: str, sell_in: int, quality: int) -> InnItem:
 
     if name in _ITEM_CLASSES:
         return _ITEM_CLASSES[name](name, sell_in, quality)
-    if name.startswith(Conjured.NAME_PREFIX):
+    if name.startswith(Conjured.DISPLAY_NAME_SEED):
         return Conjured(name, sell_in, quality)
     return NormalItem(name, sell_in, quality)
 
